@@ -680,14 +680,28 @@ pre {padding: 20px;}
 				if(req.readyState != 4) {
 					return
 				}
+				var rsp = document.getElementById("response");
+				
 				if (req.readyState == 4 && req.status == 200) {
-					document.getElementById("response").innerText = JSON.stringify(JSON.parse(req.responseText), null, 2);
+					var data = JSON.parse(req.responseText);
+					rsp.style.backgroundColor = 'none';
+					var table = document.createElement("table");
+					table.setAttribute("class", "table");
+
+					for (let key in data) {
+						var text = JSON.stringify(data[key], null, 2);
+						table.innerHTML += '<tr><th>'+key+'</th><td>'+text+'</td></tr>';
+					}
+
+					rsp.innerHTML = '';
+					rsp.appendChild(table);
+					//rsp.innerText = JSON.stringify(JSON.parse(req.responseText), null, 2);
 				} else if (req.responseText.slice(0, 1) == "{") {
-					document.getElementById("response").innerText = JSON.stringify(JSON.parse(req.responseText), null, 2);
+					rsp.innerText = JSON.stringify(JSON.parse(req.responseText), null, 2);
 				} else if (req.responseText.length > 0) {
-					document.getElementById("response").innerText = req.responseText;
+					rsp.innerText = req.responseText;
 				} else {
-					document.getElementById("response").innerText = "Request error " + req.status;
+					rsp.innerText = "Request error " + req.status;
 				}
 				console.log(req.responseText);
 			}
